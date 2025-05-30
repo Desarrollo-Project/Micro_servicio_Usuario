@@ -50,6 +50,13 @@ public class UsuarioEventHandler : IUsuarioEventHandler
         await Usuarios.UpdateOneAsync(filter, update);
     }
 
+    public async Task HandleUsuarioPasswordCambiadoAsync(UsuarioPasswordCambiadoEvent evento)
+    {
+        var filter = Builders<UsuarioMongo>.Filter.Eq(u => u.Id, evento.UsuarioId);
+        var update = Builders<UsuarioMongo>.Update.Set(u => u.Password, evento.Password);
+        await Usuarios.UpdateOneAsync(filter, update);
+    }
+
     public async Task HandleActividadRegistradaAsync(ActividadRegistradaEvent evento)
     {
         var actividad = new ActividadMongo

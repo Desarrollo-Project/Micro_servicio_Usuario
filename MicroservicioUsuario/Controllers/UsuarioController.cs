@@ -47,6 +47,17 @@ namespace Web.Controllers
         }
 
 
+        [HttpPatch("cambiar-password")]
+        public async Task<IActionResult> CambiarPassword([FromBody] CambiarPasswordDto dto)
+        {
+            var command = new CambiarPasswordCommand(dto.UsuarioId, dto.PasswordActual, dto.NuevoPassword);
+            var result = await _mediator.Send(command);
+            return result ? Ok("Contraseña cambiada")
+                : BadRequest("Error al cambiar la contraseña");
+        }
+
+
+
         [HttpGet("{usuarioId}/historial")]
         public async Task<IActionResult> ObtenerHistorial(
             Guid usuarioId,

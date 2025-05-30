@@ -12,5 +12,4 @@ public interface IUsuarioRepository
     Task<Usuario> GetByIdAsync(Guid id);
     Task<Usuario> GetByEmail(string email);
 
-    Task<Usuario> GetByTokenRecuperacion(string token);
 }

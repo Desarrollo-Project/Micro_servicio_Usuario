@@ -45,6 +45,12 @@ public class RabbitMQMessageProcessor : IRabbitMQMessageProcessor
                     await handler.HandleUsuarioConfirmadoAsync(confirmadoEvent);
                     break;
 
+                case "UsuarioPasswordCambiadoEvent":
+                    var passwordEvent = JsonSerializer.Deserialize<UsuarioPasswordCambiadoEvent>(message);
+                    await handler.HandleUsuarioPasswordCambiadoAsync(passwordEvent);
+                    break;
+
+
 
                 case "ActividadRegistradaEvent":
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, IncludeFields = true };
