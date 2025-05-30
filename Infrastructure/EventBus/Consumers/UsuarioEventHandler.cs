@@ -57,7 +57,21 @@ public class UsuarioEventHandler : IUsuarioEventHandler
         await Usuarios.UpdateOneAsync(filter, update);
     }
 
-   
+
+    public async Task HandlePerfilActualizadoAsync(PerfilActualizadoEvent evento)
+    {
+        var filter = Builders<UsuarioMongo>.Filter.Eq(u => u.Id, evento.UsuarioId);
+        var update = Builders<UsuarioMongo>.Update
+            .Set(u => u.Nombre, evento.Nombre)
+            .Set(u => u.Apellido, evento.Apellido)
+            .Set(u => u.Correo, evento.Correo)
+            .Set(u => u.Telefono, evento.Telefono)
+            .Set(u => u.Direccion, evento.Direccion);
+
+        await Usuarios.UpdateOneAsync(filter, update);
+    }
+
+
 
     public async Task HandleActividadRegistradaAsync(ActividadRegistradaEvent evento)
     {

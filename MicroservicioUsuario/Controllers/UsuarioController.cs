@@ -58,6 +58,30 @@ namespace Web.Controllers
 
 
 
+        [HttpPut("actualizar-perfil")]
+        public async Task<IActionResult> ActualizarPerfil([FromBody] ActualizarPerfilDto dto)
+        {
+            var command = new ActualizarPerfilCommand(
+                dto.UsuarioId,
+                dto.Nombre,
+                dto.Apellido,
+                dto.Correo,
+                dto.Telefono,
+                dto.Direccion
+            );
+            var result = await _mediator.Send(command);
+            return result ? Ok("Perfil actualizado")
+                : BadRequest("Error al actualizar el perfil");
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUsuario(Guid id)
+        {
+            var usuario = await _mediator.Send(new GetUsuarioByIdQuery(id));
+            return usuario != null ? Ok(usuario) : NotFound();
+        }
+
 
         [HttpPost("solicitar-recuperacion")]
         public async Task<IActionResult> SolicitarRecuperacion([FromBody] SolicitudRecuperacionDto dto)

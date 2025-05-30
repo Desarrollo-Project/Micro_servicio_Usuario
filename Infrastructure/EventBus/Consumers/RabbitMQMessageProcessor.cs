@@ -51,6 +51,11 @@ public class RabbitMQMessageProcessor : IRabbitMQMessageProcessor
                     break;
 
 
+                case "PerfilActualizadoEvent":
+                    var perfilEvent = JsonSerializer.Deserialize<PerfilActualizadoEvent>(message);
+                    await handler.HandlePerfilActualizadoAsync(perfilEvent);
+                    break;
+
                 case "ActividadRegistradaEvent":
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, IncludeFields = true };
                     var actividadEvent = JsonSerializer.Deserialize<ActividadRegistradaEvent>(message, options);
