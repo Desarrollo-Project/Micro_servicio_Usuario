@@ -37,6 +37,10 @@ namespace Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(u => u.Correo == email);
         }
 
-    
+        public async Task<Usuario> GetByTokenRecuperacion(string token)
+        {
+            return await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.TokenRecuperacion == token);
+        }
     }
 }

@@ -57,6 +57,8 @@ public class UsuarioEventHandler : IUsuarioEventHandler
         await Usuarios.UpdateOneAsync(filter, update);
     }
 
+   
+
     public async Task HandleActividadRegistradaAsync(ActividadRegistradaEvent evento)
     {
         var actividad = new ActividadMongo

@@ -58,6 +58,22 @@ namespace Web.Controllers
 
 
 
+
+        [HttpPost("solicitar-recuperacion")]
+        public async Task<IActionResult> SolicitarRecuperacion([FromBody] SolicitudRecuperacionDto dto)
+        {
+            var result = await _mediator.Send(new GenerarTokenRecuperacionCommand(dto.Correo));
+            return result ? Ok() : BadRequest("Correo no registrado");
+        }
+
+        [HttpPatch("restablecer-password")]
+        public async Task<IActionResult> RestablecerPassword([FromBody] RestablecerPasswordDto dto)
+        {
+            var command = new RestablecerPasswordCommand(dto.Token, dto.NuevaPassword);
+            var result = await _mediator.Send(command);
+            return result ? Ok("Contraseña actualizada") : BadRequest("Token inválido o expirado");
+        }
+
         [HttpGet("{usuarioId}/historial")]
         public async Task<IActionResult> ObtenerHistorial(
             Guid usuarioId,
