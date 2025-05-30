@@ -45,6 +45,13 @@ public class RabbitMQMessageProcessor : IRabbitMQMessageProcessor
                     await handler.HandleUsuarioConfirmadoAsync(confirmadoEvent);
                     break;
 
+
+                case "ActividadRegistradaEvent":
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, IncludeFields = true };
+                    var actividadEvent = JsonSerializer.Deserialize<ActividadRegistradaEvent>(message, options);
+                    await handler.HandleActividadRegistradaAsync(actividadEvent);
+                    break;
+
                 default:
                     throw new InvalidOperationException($"Tipo de evento desconocido: {eventType}");
             }

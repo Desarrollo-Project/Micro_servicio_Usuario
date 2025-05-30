@@ -1,5 +1,5 @@
 ﻿using Domain.Entities;
-
+using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence
@@ -8,7 +8,7 @@ namespace Infrastructure.Persistence
     {
         public DbSet<Usuario> Usuarios { get; set; }
 
-
+        public DbSet<Actividad> Actividades { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

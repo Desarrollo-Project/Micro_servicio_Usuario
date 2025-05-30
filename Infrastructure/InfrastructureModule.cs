@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.ValueObjects;
 using Infrastructure.DataBase;
 using Infrastructure.EventBus.Connection;
 using Infrastructure.EventBus.Consumers;
@@ -39,7 +40,7 @@ namespace Infrastructure
 
             services.AddSingleton<IEventPublisher, RabbitMQEventPublisher>();
 
-            // Obtener la cadena de conexiï¿½n correctamente
+            // Obtener la cadena de conexión correctamente
             var postgresConnection = configuration.GetConnectionString("Postgres");
 
             services.AddDbContext<AppDbContext>(options =>
@@ -62,7 +63,13 @@ namespace Infrastructure
                     "usuarios"
                 )
             );
-
+            services.AddScoped<IActividadRepository, ActividadRepository>();
+            services.AddSingleton<IMongoRepository<ActividadMongo>>(sp =>
+                new MongoRepository<ActividadMongo>(
+                    sp.GetRequiredService<IMongoClient>(),
+                    "usuarios_db",
+                    "actividades"
+                ));
 
         }
     }

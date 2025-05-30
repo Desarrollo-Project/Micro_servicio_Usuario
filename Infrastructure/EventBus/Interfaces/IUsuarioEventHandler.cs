@@ -8,4 +8,5 @@ public interface IUsuarioEventHandler
     Task HandleUsuarioRegistradoAsync(UsuarioCreadoEvent evento);
     Task HandleUsuarioConfirmadoAsync(UsuarioConfirmadoEvent evento);
 
+    Task HandleActividadRegistradaAsync(ActividadRegistradaEvent evento);
 }

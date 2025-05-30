@@ -2,7 +2,7 @@
 using MediatR;
 using Application.Interfaces;
 using Domain.Events;
-
+using Domain.ValueObjects;
 
 
 namespace Application.Handlers;
@@ -13,20 +13,20 @@ public class CrearUsuarioCommandHandler : IRequestHandler<CrearUsuarioCommand, G
     private readonly IUsuarioFactory _factory;
     private readonly IEventPublisher _eventPublisher;
     private readonly ISmtpEmailService _smtpEmailService;
-
+    private readonly IActividadRepository _actividadRepository;
 
     public CrearUsuarioCommandHandler(
         IUsuarioRepository repository,
         IUsuarioFactory factory,
         IEventPublisher eventPublisher,
-        ISmtpEmailService smtpEmailService
-        )
+        ISmtpEmailService smtpEmailService,
+        IActividadRepository actividadRepository)
     {
         _repository = repository;
         _factory = factory;
         _eventPublisher = eventPublisher;
         _smtpEmailService = smtpEmailService;
-    
+        _actividadRepository = actividadRepository;
     }
 
     public async Task<Guid> Handle(CrearUsuarioCommand request, CancellationToken cancellationToken)
@@ -85,6 +85,27 @@ public class CrearUsuarioCommandHandler : IRequestHandler<CrearUsuarioCommand, G
             Console.WriteLine($"Error al enviar correo: {ex.Message}");
         }
 
+        var actividad = new Actividad(
+            usuario.Id,
+            "Usuario Registrado",
+            "El usuario se registró exitosamente en el sistema."
+        );
+
+        // Registrar actividad
+        await _actividadRepository.RegistrarActividad(actividad);
+
+        // Publicar evento de actividad registrada (Mongo)
+        _eventPublisher.Publish(
+            new ActividadRegistradaEvent(
+                actividad.Id,
+                actividad.UsuarioId,
+                actividad.TipoAccion,
+                actividad.Detalles,
+                actividad.Fecha
+            ),
+            exchangeName: "usuarios_exchange",
+            routingKey: "actividad.registrada"
+        );
 
         return usuario.Id;
     }
