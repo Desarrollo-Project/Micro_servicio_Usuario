@@ -8,6 +8,5 @@ public interface IUsuarioEventHandler
     Task HandleUsuarioRegistradoAsync(UsuarioCreadoEvent evento);
     Task HandleUsuarioConfirmadoAsync(UsuarioConfirmadoEvent evento);
     Task HandleUsuarioPasswordCambiadoAsync(UsuarioPasswordCambiadoEvent evento);
-
     Task HandleActividadRegistradaAsync(ActividadRegistradaEvent evento);
 }

@@ -51,7 +51,6 @@ public class RabbitMQMessageProcessor : IRabbitMQMessageProcessor
                     break;
 
 
-
                 case "ActividadRegistradaEvent":
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, IncludeFields = true };
                     var actividadEvent = JsonSerializer.Deserialize<ActividadRegistradaEvent>(message, options);
