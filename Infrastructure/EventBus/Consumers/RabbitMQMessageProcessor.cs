@@ -50,6 +50,7 @@ public class RabbitMQMessageProcessor : IRabbitMQMessageProcessor
                     await handler.HandleUsuarioPasswordCambiadoAsync(passwordEvent);
                     break;
 
+
                 case "PerfilActualizadoEvent":
                     var perfilEvent = JsonSerializer.Deserialize<PerfilActualizadoEvent>(message);
                     await handler.HandlePerfilActualizadoAsync(perfilEvent);

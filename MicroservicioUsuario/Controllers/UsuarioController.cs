@@ -57,6 +57,7 @@ namespace Web.Controllers
         }
 
 
+
         [HttpPut("actualizar-perfil")]
         public async Task<IActionResult> ActualizarPerfil([FromBody] ActualizarPerfilDto dto)
         {
