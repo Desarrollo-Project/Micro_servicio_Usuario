@@ -1,6 +1,7 @@
 ﻿using Application.Commands;
 using Application.Interfaces;
 using Domain.Events;
+using Domain.ValueObjects;
 using MediatR;
 
 namespace Application.Handlers;
@@ -9,14 +10,16 @@ public class ConfirmarUsuarioCommandHandler : IRequestHandler<ConfirmarUsuarioCo
 {
     private readonly IUsuarioRepository _repository;
     private readonly IEventPublisher _eventPublisher;
+    private readonly IActividadRepository _actividadRepository;
 
     public ConfirmarUsuarioCommandHandler(
         IUsuarioRepository repository,
-        IEventPublisher eventPublisher)
+        IEventPublisher eventPublisher,
+        IActividadRepository actividadRepository)
     {
         _repository = repository;
         _eventPublisher = eventPublisher;
-    
+        _actividadRepository = actividadRepository;
     }
 
     public async Task<bool> Handle(ConfirmarUsuarioCommand request, CancellationToken cancellationToken)
@@ -40,6 +43,27 @@ public class ConfirmarUsuarioCommandHandler : IRequestHandler<ConfirmarUsuarioCo
             routingKey: "usuario.confirmado"
         );
 
+        var actividad = new Actividad(
+            usuario.Id,
+            "Cuenta Confirmada",
+            "El usuario ha confirmado su cuenta exitosamente."
+        );
+
+        // Registrar actividad de confirmación
+        await _actividadRepository.RegistrarActividad(actividad);
+
+        // Publicar evento de actividad registrada (Mongo)
+        _eventPublisher.Publish(
+            new ActividadRegistradaEvent(
+                actividad.Id,
+                actividad.UsuarioId,
+                actividad.TipoAccion,
+                actividad.Detalles,
+                actividad.Fecha
+            ),
+            exchangeName: "usuarios_exchange",
+            routingKey: "actividad.registrada"
+        );
 
         return true;
     }

@@ -1,5 +1,6 @@
 ﻿using Application.Commands;
 using Application.DTOs;
+using Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -46,6 +47,33 @@ namespace Web.Controllers
         }
 
 
+        [HttpGet("{usuarioId}/historial")]
+        public async Task<IActionResult> ObtenerHistorial(
+            Guid usuarioId,
+            [FromQuery] string? tipoAccion,
+            [FromQuery] DateTime? desde,
+            [FromQuery] DateTime? hasta)
+        {
+
+            var actividades = await _mediator.Send(new ObtenerHistorialQuery(
+                usuarioId,
+                tipoAccion,
+                desde,
+                hasta
+            ));
+
+            return Ok(actividades);
+        }
+
+
+
+
+        [HttpGet("actividades")]
+        public async Task<IActionResult> ObtenerTodasLasActividades()
+        {
+            var actividades = await _mediator.Send(new ObtenerTodasLasActividadesQuery());
+            return Ok(actividades);
+        }
 
     }
 }

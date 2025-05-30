@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Domain.Entities;
 using Domain.Events;
-
+using Domain.ValueObjects;
 using Infrastructure.EventBus.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
@@ -20,7 +20,9 @@ public class UsuarioEventHandler : IUsuarioEventHandler
     private IMongoCollection<UsuarioMongo> Usuarios =>
         _mongoClient.GetDatabase("usuarios_db").GetCollection<UsuarioMongo>("usuarios");
 
- 
+    private IMongoCollection<ActividadMongo> Actividades =>
+        _mongoClient.GetDatabase("usuarios_db").GetCollection<ActividadMongo>("actividades");
+
     public async Task HandleUsuarioRegistradoAsync(UsuarioCreadoEvent evento)
     {
 
@@ -48,5 +50,16 @@ public class UsuarioEventHandler : IUsuarioEventHandler
         await Usuarios.UpdateOneAsync(filter, update);
     }
 
-    
+    public async Task HandleActividadRegistradaAsync(ActividadRegistradaEvent evento)
+    {
+        var actividad = new ActividadMongo
+        {
+            Id = evento.ActividadId,
+            UsuarioId = evento.UsuarioId,
+            TipoAccion = evento.TipoAccion,
+            Detalles = evento.Detalles,
+            Fecha = evento.Fecha
+        };
+        await Actividades.InsertOneAsync(actividad);
+    }
 }
